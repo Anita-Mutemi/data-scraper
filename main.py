@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends # type: ignore
 from sqlalchemy.orm import Session
 from database import SessionLocal
 import models
@@ -20,11 +20,13 @@ def create_user(user_id: str, db: Session = Depends(get_db)):
     db.refresh(user)
     return {"user_id": user.user_id}
 
-@app.post('/posts/{user_id}/{post_id}')
+@app.post('/posts/{user_id}')
 def create_post(user_id: str, post_id: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if user:
-        post = models.Post(post_id=post_id, user_id=user_id)
+        # Strip query parameters from post_id
+        post_id_base = post_id.split('?')[0]
+        post = models.Post(post_id=post_id_base, user_id=user_id)
         db.add(post)
         db.commit()
         db.refresh(post)
@@ -33,9 +35,11 @@ def create_post(user_id: str, post_id: str, db: Session = Depends(get_db)):
 
 @app.post('/likers/{post_id}/{liker_id}/{name}')
 def create_liker(post_id: str, liker_id: str, name: str, title: str = None, db: Session = Depends(get_db)):
-    post = db.query(models.Post).filter(models.Post.post_id == post_id).first()
+    # Strip query parameters from post_id
+    post_id_base = post_id.split('?')[0]
+    post = db.query(models.Post).filter(models.Post.post_id == post_id_base).first()
     if post:
-        liker = models.Liker(liker_id=liker_id, name=name, title=title, post_id=post_id)
+        liker = models.Liker(liker_id=liker_id, name=name, title=title, post_id=post_id_base)
         db.add(liker)
         db.commit()
         db.refresh(liker)
