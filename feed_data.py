@@ -3,15 +3,15 @@ import sys
 
 BASE_URL = "http://localhost:8000"
 
-def create_user(linkedin_id):
+def create_user(user_id):
     url = f"{BASE_URL}/users/"
-    data = {"linkedin_id": linkedin_id}
+    data = {"user_id": user_id}
     response = requests.post(url, json=data)
     print(response.json())
 
-def create_post(linkedin_id, post_id):
+def create_post(user_id, post_id):
     url = f"{BASE_URL}/posts/"
-    data = {"linkedin_id": linkedin_id, "post_id": post_id}
+    data = {"user_id": user_id, "post_id": post_id}
     response = requests.post(url, json=data)
     print(response.json())
 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python feed_data.py <command> [args]")
         print("Commands:")
-        print("  create_user <linkedin_id>")
-        print("  create_post <linkedin_id> <post_id>")
+        print("  create_user <user_id>")
+        print("  create_post <user_id> <post_id>")
         print("  create_liker <post_id> <liker_id> <name> [title]")
         sys.exit(1)
 
@@ -35,12 +35,12 @@ if __name__ == "__main__":
 
     if command == "create_user":
         if len(args) != 1:
-            print("Usage: python feed_data.py create_user <linkedin_id>")
+            print("Usage: python feed_data.py create_user <user_id>")
             sys.exit(1)
         create_user(args[0])
     elif command == "create_post":
         if len(args) != 2:
-            print("Usage: python feed_data.py create_post <linkedin_id> <post_id>")
+            print("Usage: python feed_data.py create_post <user_id> <post_id>")
             sys.exit(1)
         create_post(args[0], args[1])
     elif command == "create_liker":

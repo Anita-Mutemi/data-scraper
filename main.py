@@ -13,18 +13,18 @@ def get_db():
         db.close()
 
 @app.post('/users/')
-def create_user(linkedin_id: str, db: Session = Depends(get_db)):
-    user = models.User(linkedin_id=linkedin_id)
+def create_user(user_id: str, db: Session = Depends(get_db)):
+    user = models.User(user_id=user_id)
     db.add(user)
     db.commit()
     db.refresh(user)
-    return {"user_id": user.linkedin_id}
+    return {"user_id": user.user_id}
 
 @app.post('/posts/')
-def create_post(linkedin_id: str, post_id: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.linkedin_id == linkedin_id).first()
+def create_post(user_id: str, post_id: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if user:
-        post = models.Post(post_id=post_id, user_id=linkedin_id)
+        post = models.Post(post_id=post_id, user_id=user_id)
         db.add(post)
         db.commit()
         db.refresh(post)
@@ -42,9 +42,9 @@ def create_liker(post_id: str, liker_id: str, name: str, title: str = None, db: 
         return {"liker_id": liker.liker_id, "name": liker.name, "title": liker.title}
     return {"error": "Post not found"}
 
-@app.get('/activity/{linkedin_id}')
-def get_activity(linkedin_id: str, db: Session = Depends(get_db)):
-    user = db.query(models.User).filter(models.User.linkedin_id == linkedin_id).first()
+@app.get('/activity/{user_id}')
+def get_activity(user_id: str, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if user:
         activity = []
         for post in user.posts:

@@ -8,7 +8,7 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    linkedin_id = Column(String, nullable=False, unique=True)
+    user_id = Column(String, nullable=False, unique=True)
 
     posts = relationship('Post', back_populates='user')
 
@@ -17,7 +17,7 @@ class Post(Base):
 
     id = Column(Integer, primary_key=True)
     post_id = Column(String, nullable=False, unique=True)
-    user_id = Column(String, ForeignKey('users.linkedin_id'), nullable=False)
+    user_id = Column(String, ForeignKey('users.user_id'), nullable=False)
 
     user = relationship('User', back_populates='posts')
     likers = relationship('Liker', back_populates='post')
