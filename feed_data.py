@@ -1,7 +1,6 @@
 import requests
 import sys
 
-# Replace with your FastAPI server URL
 BASE_URL = "http://localhost:8000"
 
 def create_user(linkedin_id):
