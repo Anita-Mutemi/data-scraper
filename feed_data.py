@@ -1,24 +1,24 @@
 import requests
 import sys
 
+
 BASE_URL = "http://localhost:8000"
 
 def create_user(user_id):
-    url = f"{BASE_URL}/users/"
-    data = {"user_id": user_id}
-    response = requests.post(url, json=data)
+    url = f"{BASE_URL}/users/{user_id}"
+    response = requests.post(url)
     print(response.json())
 
 def create_post(user_id, post_id):
-    url = f"{BASE_URL}/posts/"
-    data = {"user_id": user_id, "post_id": post_id}
-    response = requests.post(url, json=data)
+    url = f"{BASE_URL}/posts/{user_id}/{post_id}"
+    response = requests.post(url)
     print(response.json())
 
 def create_liker(post_id, liker_id, name, title=None):
-    url = f"{BASE_URL}/likers/"
-    data = {"post_id": post_id, "liker_id": liker_id, "name": name, "title": title}
-    response = requests.post(url, json=data)
+    url = f"{BASE_URL}/likers/{post_id}/{liker_id}/{name}"
+    if title:
+        url += f"?title={title}"
+    response = requests.post(url)
     print(response.json())
 
 if __name__ == "__main__":
@@ -54,4 +54,3 @@ if __name__ == "__main__":
     else:
         print("Invalid command")
         sys.exit(1)
-        

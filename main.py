@@ -12,7 +12,7 @@ def get_db():
     finally:
         db.close()
 
-@app.post('/users/')
+@app.post('/users/{user_id}')
 def create_user(user_id: str, db: Session = Depends(get_db)):
     user = models.User(user_id=user_id)
     db.add(user)
@@ -20,7 +20,7 @@ def create_user(user_id: str, db: Session = Depends(get_db)):
     db.refresh(user)
     return {"user_id": user.user_id}
 
-@app.post('/posts/')
+@app.post('/posts/{user_id}/{post_id}')
 def create_post(user_id: str, post_id: str, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.user_id == user_id).first()
     if user:
@@ -31,7 +31,7 @@ def create_post(user_id: str, post_id: str, db: Session = Depends(get_db)):
         return {"post_id": post.post_id}
     return {"error": "User not found"}
 
-@app.post('/likers/')
+@app.post('/likers/{post_id}/{liker_id}/{name}')
 def create_liker(post_id: str, liker_id: str, name: str, title: str = None, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.post_id == post_id).first()
     if post:
